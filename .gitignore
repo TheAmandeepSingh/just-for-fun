@@ -1,1 +1,31 @@
- 
+# Build artifacts
+*.o
+*.out
+*.exe
+heart_fractal
+
+# Generated images
+*.png
+
+# IDE specific files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# macOS system files
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Dependencies
+/vendor/
+/lib/
+
+# Build directories
+/build/
+/bin/
+/obj/
+
+# Debug files
+*.dSYM/ 
