@@ -4,6 +4,7 @@
 #include <cmath>
 #include <png.h>
 #include <omp.h>
+#include <unistd.h>
 
 #define A -1.00
 #define B 0.16
@@ -78,12 +79,21 @@ void generate_fractal(png_bytep *row_pointers) {
 }
 
 int main() {
+    // Print current working directory
+    char cwd[1024];
+    if (getcwd(cwd, sizeof(cwd)) != NULL) {
+        printf("Current working directory: %s\n", cwd);
+    }
+
     // Create a PNG file
     FILE *fp = fopen("heart_fractal.png", "wb");
     if (!fp) {
-        fprintf(stderr, "Could not open file for writing\n");
+        // Print more detailed error message
+        perror("Could not open file for writing");
         return 1;
     }
+
+    printf("Successfully opened file for writing\n");
 
     // Initialize PNG writing
     png_structp png = png_create_write_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
@@ -124,12 +134,14 @@ int main() {
         row_pointers[y] = (png_byte*)malloc(WIDTH * 3);
     }
 
-    // Generate the fractal
+    printf("Starting fractal generation...\n");
     generate_fractal(row_pointers);
+    printf("Fractal generation complete\n");
 
-    // Write the image
+    printf("Writing PNG file...\n");
     png_write_image(png, row_pointers);
     png_write_end(png, NULL);
+    printf("PNG file written\n");
 
     // Clean up
     for (int y = 0; y < HEIGHT; y++) {
@@ -139,6 +151,6 @@ int main() {
     png_destroy_write_struct(&png, &info);
     fclose(fp);
 
-    printf("Heart fractal has been generated as 'heart_fractal.png'\n");
+    printf("Heart fractal has been generated as '%s/heart_fractal.png'\n", cwd);
     return 0;
 }
